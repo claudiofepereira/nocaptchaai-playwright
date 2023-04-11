@@ -606,7 +606,15 @@ class Solver:
                 case 1:
                     await self.solve_hcaptcha_bbox()
                 case 2:
+                    # TODO - Still needs testing. For now, just skip challenge and go again.
                     # await self.solve_hcaptcha_multi()
-                    break
+                    refresh_button = self.checkbox_frame.locator(CAPTCHA_REFRESH_BUTTON)
+
+                    if not refresh_button:
+                        return
+
+                    refresh_button.click()
+
+                    self.page.wait_for_timeout(1000)
 
         return self.solved

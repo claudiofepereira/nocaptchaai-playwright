@@ -8,11 +8,10 @@ from playwright.async_api import (
 import asyncio
 import os
 
-from src.solver.solver import Solver
-
+from nocaptchaai_playwright.solver import Solver
 
 API_KEY: str = "your-api-key"
-API_URL: str = "https://pro.nocaptchaai.com/api/solve" # Specify API URL (pro or not).
+API_URL: str = "https://pro.nocaptchaai.com/api/solve"  # Specify API URL (pro or not).
 
 
 async def main() -> None:

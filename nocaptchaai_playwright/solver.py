@@ -4,7 +4,14 @@ import re
 import requests
 from requests.models import Response
 from json import dumps
-from playwright.async_api import Page, Locator, FrameLocator, TimeoutError, Frame, ElementHandle
+from playwright.async_api import (
+    Page,
+    Locator,
+    FrameLocator,
+    TimeoutError,
+    Frame,
+    ElementHandle,
+)
 import os
 
 # Captcha xpath selectors.
@@ -29,12 +36,12 @@ class Solver:
 
     def __init__(self, api_key: str = None, api_url: str = None) -> None:
         """
-        Initializes the solver. Sets the API key and API url.
+        Initializes the nocaptchaai_playwright. Sets the API key and API url.
         If the api_key and api_url are not provided, it will try to get them from the environment variables.
 
         Args:
-            api_key (str | None): The API key for the captcha solver.
-            api_url (str | None): The API url for the captcha solver.
+            api_key (str | None): The API key for the captcha nocaptchaai_playwright.
+            api_url (str | None): The API url for the captcha nocaptchaai_playwright.
         """
         self.API_KEY = api_key if api_key is not None else os.getenv("API_KEY")
         self.API_URL = api_url if api_url is not None else os.getenv("API_URL")
@@ -130,7 +137,7 @@ class Solver:
             self.solved = True
             return
 
-        # Getting the images for the captcha solver.
+        # Getting the images for the captcha nocaptchaai_playwright.
         images_div: list[Locator] = await self.checkbox_frame.locator(
             TASK_IMAGE,
         ).all()
@@ -151,7 +158,6 @@ class Solver:
 
         # Populating data for the API call.
         for index, item in enumerate(images_div):
-
             image_style: str | None = await item.locator(
                 "div.image",
             ).get_attribute("style")
@@ -281,7 +287,9 @@ class Solver:
             }
         """
 
-        captcha_frame: ElementHandle | None = await self.page.query_selector(HOOK_CHALLENGE)
+        captcha_frame: ElementHandle | None = await self.page.query_selector(
+            HOOK_CHALLENGE
+        )
 
         if not captcha_frame:
             return
@@ -546,7 +554,14 @@ class Solver:
             headers={"apikey": self.API_KEY},
         )
 
-        return response.json()["Balance"] > 0.0 or response.json()["Subscription"]["remaining"] > 0
+        # Check if get was successful.
+        if response.status_code != 200:
+            return False
+
+        return (
+            response.json()["Balance"] > 0.0
+            or response.json()["Subscription"]["remaining"] > 0
+        )
 
     async def solve(
         self,
@@ -589,6 +604,7 @@ class Solver:
                 case 1:
                     await self.solve_hcaptcha_bbox()
                 case 2:
-                    await self.solve_hcaptcha_multi()
+                    # await self.solve_hcaptcha_multi()
+                    break
 
         return self.solved

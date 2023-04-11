@@ -34,7 +34,7 @@ async def main() -> None:
             "https://nopecha.com/demo/hcaptcha",
             wait_until="networkidle",
         )
-        await captcha_solver.solve(page)
+        solve_status = await captcha_solver.solve(page)
         await page.wait_for_timeout(1000)
 
 

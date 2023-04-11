@@ -36,12 +36,12 @@ class Solver:
 
     def __init__(self, api_key: str = None, api_url: str = None) -> None:
         """
-        Initializes the nocaptchaai_playwright. Sets the API key and API url.
+        Initializes the Solver object. Sets the API key and API url.
         If the api_key and api_url are not provided, it will try to get them from the environment variables.
 
         Args:
-            api_key (str | None): The API key for the captcha nocaptchaai_playwright.
-            api_url (str | None): The API url for the captcha nocaptchaai_playwright.
+            api_key (str | None): The API key for the captcha solver.
+            api_url (str | None): The API url for the captcha solver.
         """
         self.API_KEY = api_key if api_key is not None else os.getenv("API_KEY")
         self.API_URL = api_url if api_url is not None else os.getenv("API_URL")
@@ -58,6 +58,7 @@ class Solver:
         """
         target: str = self.target.lower().strip()
 
+        # TODO Improve method of checking captcha version.
         # Check if keywords are present in the target.
         if "please click each image containing" in target:
             self.captcha_type = 0
@@ -137,7 +138,7 @@ class Solver:
             self.solved = True
             return
 
-        # Getting the images for the captcha nocaptchaai_playwright.
+        # Getting the images for the captcha solver.
         images_div: list[Locator] = await self.checkbox_frame.locator(
             TASK_IMAGE,
         ).all()
@@ -555,7 +556,8 @@ class Solver:
         )
 
         # Check if get was successful.
-        if response.status_code != 200:
+        if response.json()["error"]:
+            self.balance_error = response.json()["error"]
             return False
 
         return (
@@ -585,7 +587,8 @@ class Solver:
         while not self.solved:
             # First check if user has balance or daily limit hasn't been hit.
             if not self.has_balance():
-                return
+                print(self.balance_error)  # TODO Add logging.
+                return self.solved
 
             await self.page.wait_for_timeout(1500)
 

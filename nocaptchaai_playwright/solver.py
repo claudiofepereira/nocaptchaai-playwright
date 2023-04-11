@@ -556,8 +556,8 @@ class Solver:
         )
 
         # Check if get was successful.
-        if response.json()["error"]:
-            self.balance_error = response.json()["error"]
+        if "error" in response.json():
+            print(response.json()["error"])  # TODO - Add logging.
             return False
 
         return (
@@ -587,7 +587,6 @@ class Solver:
         while not self.solved:
             # First check if user has balance or daily limit hasn't been hit.
             if not self.has_balance():
-                print(self.balance_error)  # TODO Add logging.
                 return self.solved
 
             await self.page.wait_for_timeout(1500)

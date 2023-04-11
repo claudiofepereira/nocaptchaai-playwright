@@ -12,7 +12,7 @@ DOCLINES = (__doc__ or "").split("\n")
 
 setup(
     name="nocaptchaai_playwright",
-    version="0.0.3",
+    version="0.1.0",
     description="Playwright implementation of the NoCaptchaAI API",
     long_description="\n".join(DOCLINES[2:]),
     url="https://github.com/claudiofepereira/nocaptchaai-playwright",

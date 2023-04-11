@@ -1,4 +1,14 @@
+"""nocaptchaai-playwright
+
+nocaptchaai-playwright is a Python library that uses Playwright and NoCaptchaAI.com API to solve hCaptcha challenges.
+
+An example of how to use this library can be found in examples/nopecha_solver_example.py.
+
+"""
+
 from setuptools import setup, find_packages
+
+DOCLINES = (__doc__ or "").split("\n")
 
 setup(
     name="nocaptchaai_playwright",
